@@ -67,3 +67,6 @@ then
 else
   echo "No changes detected"
 fi
+
+COMMIT_HASH=$(git show -s --format=%H)
+echo "::set-output name=commit_hash::$COMMIT_HASH"

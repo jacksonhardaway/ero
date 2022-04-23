@@ -47,6 +47,7 @@ jobs:
       with:
         path: action
     - name: Commit Changes
+      id: commit
       uses: ./action
       env:
         API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
@@ -57,10 +58,12 @@ jobs:
         user_name: 'jaacksondev'
         commit_message: ${{ github.event.client_payload.version }}
     - name: Update Worker State
+      if: ${{ success() }}
       env:
         WORKER: ${{ secrets.WORKER_URL }}
-      run: curl $WORKER/finish
-
-    
-  
-        
+      run: curl $WORKER/finish?commit=${{ steps.commit.outputs.commit_hash }}
+    - name: Update Worker Fail State
+      if: ${{ failure() }}
+      env:
+        WORKER: ${{ secrets.WORKER_URL }}
+      run: curl $WORKER/fail
