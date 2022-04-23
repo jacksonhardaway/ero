@@ -34,7 +34,7 @@ jobs:
     - name: Download Libraries
       env:
         LIBRARY_URLS: ${{ github.event.client_payload.libraries.urls }}
-      run: wget --content-on-error -P run/libraries/ $LIBRARY_URLS
+      run: wget -P run/libraries/ $LIBRARY_URLS
     - name: Decompile Minecraft
       env:
         LIBRARIES: ${{ github.event.client_payload.libraries.jars }}
