@@ -1,0 +1,64 @@
+name: Run Ero
+
+on:
+  repository_dispatch:
+    types: [ start ]
+
+jobs:
+  run:
+    strategy:
+      matrix:
+        java: [17]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Decompiler
+      uses: actions/checkout@v3
+      with:
+        repository: 'jaacksondev/ero-decompiler'
+        token: ${{ secrets.API_TOKEN_GITHUB }}
+    - name: Validate Gradle Wrapper
+      uses: gradle/wrapper-validation-action@v1
+    - name: Setup JDK ${{ matrix.java }}
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.java }}
+    - name: Make Gradle Wrapper Executable
+      run: chmod +x ./gradlew
+    - name: Download Client
+      env:
+        CLIENT: ${{ github.event.client_payload.downloads.client.url }}
+      run: wget -P /run/ $CLIENT
+    - name: Download Client Mappings
+      env:
+        CLIENT_MAPPINGS: ${{ github.event.client_payload.downloads.client_mappings.url }}
+      run: wget -P /run/ $CLIENT_MAPPINGS
+    - name: Download Server
+      env:
+        SERVER: ${{ github.event.client_payload.downloads.server.url }}
+      run: wget -P /run/ $SERVER
+    - name: Download Server Mappings
+      env:
+        SERVER_MAPPINGS: ${{ github.event.client_payload.downloads.server_mappings.url }}
+      run: wget -P /run/ $SERVER_MAPPINGS
+    - name: Download Libraries
+      env:
+        LIBRARY_URLS: ${{ github.event.client_payload.libraries.urls }}
+      run: wget -P /run/libraries/ $LIBRARY_URLS
+    - name: Decompile
+      env:
+        LIBRARIES: ${{ github.event.client_payload.libraries.jars }}
+      run: ./gradlew run $LIBRARIES
+    - name: Commit Changes
+      uses: dmnemec/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source_file: 'run/output/'
+        destination_repo: 'jaacksondev/ero-minecraft-source'
+        user_email: 'jackson@moonflower.gg'
+        user_name: 'jaacksondev'
+        commit_message: ${{ github.event.client_payload.version }}
+
+    
+  
+        
