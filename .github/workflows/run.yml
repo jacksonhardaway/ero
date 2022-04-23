@@ -24,19 +24,17 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: Make Gradle Wrapper Executable
       run: chmod +x ./gradlew
-    - name: Setup Directories
-      run: mkdir -p /run && mkdir -p /run/libraries
     - name: Download Client
       env:
         CLIENT: ${{ github.event.client_payload.downloads.client.url }}
         CLIENT_MAPPINGS: ${{ github.event.client_payload.downloads.client_mappings.url }}
         SERVER: ${{ github.event.client_payload.downloads.server.url }}
         SERVER_MAPPINGS: ${{ github.event.client_payload.downloads.server_mappings.url }}
-      run: wget -P /run/ $CLIENT $CLIENT_MAPPINGS $SERVER $SERVER_MAPPINGS
+      run: wget -P run/ $CLIENT $CLIENT_MAPPINGS $SERVER $SERVER_MAPPINGS
     - name: Download Libraries
       env:
         LIBRARY_URLS: ${{ github.event.client_payload.libraries.urls }}
-      run: wget -P /run/libraries/ $LIBRARY_URLS
+      run: wget -P run/libraries/ $LIBRARY_URLS
     - name: Decompile
       env:
         LIBRARIES: ${{ github.event.client_payload.libraries.jars }}
