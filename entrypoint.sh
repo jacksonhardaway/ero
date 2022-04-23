@@ -35,6 +35,9 @@ else
   DEST_COPY="$CLONE_DIR/$INPUT_DESTINATION_FOLDER"
 fi
 
+echo "Deleting files"
+rm -rf $CLONE_DIR/*
+
 echo "Copying contents to git repo"
 mkdir -p $CLONE_DIR/$INPUT_DESTINATION_FOLDER
 
@@ -53,9 +56,6 @@ if [ -z "$INPUT_COMMIT_MESSAGE" ]
 then
   INPUT_COMMIT_MESSAGE="Update from https://$INPUT_GIT_SERVER/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
 fi
-
-echo "Deleting files"
-rm -rf *
 
 echo "Adding git commit"
 git add .
