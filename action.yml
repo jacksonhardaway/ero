@@ -28,9 +28,6 @@ inputs:
   rename:
     description: 'Rename the destination file'
     required: false
-  use_rsync:
-    description: 'Copy files/directories using rsync instead of cp. Experimental feature, please know your use case'
-    required: false
   git_server:
     description: 'Git server host, default github.com'
     required: false
