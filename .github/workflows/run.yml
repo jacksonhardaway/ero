@@ -38,7 +38,7 @@ jobs:
     - name: Decompile Minecraft
       env:
         LIBRARIES: ${{ github.event.client_payload.libraries.jars }}
-      run: ./gradlew run $LIBRARIES
+      run: ./gradlew run --args="$LIBRARIES"
     - name: Commit Changes
       uses: dmnemec/copy_file_to_another_repo_action@main
       env:
