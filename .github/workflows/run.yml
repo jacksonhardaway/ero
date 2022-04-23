@@ -41,7 +41,7 @@ jobs:
     - name: Decompile Minecraft
       env:
         LIBRARIES: ${{ github.event.client_payload.libraries.jars }}
-      run: ./gradlew run --args="$LIBRARIES"
+      run: ./gradlew run
     - name: Checkout Actions
       uses: actions/checkout@v3
       with:
