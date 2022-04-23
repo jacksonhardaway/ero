@@ -56,6 +56,10 @@ jobs:
         user_email: 'jackson@moonflower.gg'
         user_name: 'jaacksondev'
         commit_message: ${{ github.event.client_payload.version }}
+    - name: Update Worker State
+      env:
+        WORKER: ${{ secrets.WORKER_URL }}
+      run: curl $WORKER/finish
 
     
   
