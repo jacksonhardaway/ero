@@ -24,6 +24,8 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: Make Gradle Wrapper Executable
       run: chmod +x ./gradlew
+    - name: Setup Permissions
+      run: chmod -R 777 .
     - name: Download Client
       env:
         CLIENT: ${{ github.event.client_payload.downloads.client.url }}
