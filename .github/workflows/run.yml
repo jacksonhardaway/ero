@@ -24,7 +24,7 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: Make Gradle Wrapper Executable
       run: chmod +x ./gradlew
-    - name: Download Client
+    - name: Download Binaries
       env:
         CLIENT: ${{ github.event.client_payload.downloads.client.url }}
         CLIENT_MAPPINGS: ${{ github.event.client_payload.downloads.client_mappings.url }}
@@ -34,8 +34,8 @@ jobs:
     - name: Download Libraries
       env:
         LIBRARY_URLS: ${{ github.event.client_payload.libraries.urls }}
-      run: wget -P run/libraries/ $LIBRARY_URLS
-    - name: Decompile
+      run: wget --content-on-error -P run/libraries/ $LIBRARY_URLS
+    - name: Decompile Minecraft
       env:
         LIBRARIES: ${{ github.event.client_payload.libraries.jars }}
       run: ./gradlew run $LIBRARIES
