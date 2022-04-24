@@ -9,6 +9,10 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
+    - name: Update Worker State
+      uses: webiny/action-post-run@2.0.
+      with:
+        run: 'curl -H "Content-Type: application/json" -d "{"state"&#58; "${{ job.status }}", "version"&#58; "${{ github.event.client_payload.version }}", "commit"&#58; "${{ steps.commit.outputs.commit_hash }}"}" $${{ secrets.WORKER }}/complete'
     - name: Checkout Decompiler
       uses: actions/checkout@v3
       with:
@@ -57,13 +61,3 @@ jobs:
         user_email: 'ero-git@pm.me'
         user_name: 'ero-git'
         commit_message: ${{ github.event.client_payload.version }}
-    - name: Update Worker State
-      if: ${{ success() }}
-      env:
-        WORKER: ${{ secrets.WORKER_URL }}
-      run: curl $WORKER/finish?c=${{ steps.commit.outputs.commit_hash }}&v=${{ github.event.client_payload.version }}
-    - name: Update Worker Fail State
-      if: ${{ failure() }}
-      env:
-        WORKER: ${{ secrets.WORKER_URL }}
-      run: curl $WORKER/fail?v=${{ github.event.client_payload.version }}
