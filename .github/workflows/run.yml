@@ -14,15 +14,19 @@ jobs:
       with:
         repository: 'jaacksondev/ero-decompiler'
         token: ${{ secrets.API_TOKEN_GITHUB }}
+        
     - name: Validate Gradle Wrapper
       uses: gradle/wrapper-validation-action@v1
+      
     - name: Setup JDK
       uses: actions/setup-java@v2
       with:
         distribution: 'temurin'
         java-version: ${{ github.event.client_payload.java }}
+        
     - name: Make Gradle Wrapper Executable
       run: chmod +x ./gradlew
+      
     - name: Download Binaries
       env:
         CLIENT: ${{ github.event.client_payload.downloads.client.url }}
@@ -30,22 +34,25 @@ jobs:
         SERVER: ${{ github.event.client_payload.downloads.server.url }}
         SERVER_MAPPINGS: ${{ github.event.client_payload.downloads.server_mappings.url }}
       run: wget -P run/ $CLIENT $CLIENT_MAPPINGS $SERVER $SERVER_MAPPINGS
+      
     - name: Download Libraries
-      env:
-        LIBRARY_URLS: ${{ github.event.client_payload.libraries.urls }}
-      run: wget -P run/libraries/ $LIBRARY_URLS
+      run: wget -P run/libraries/ $${{ github.event.client_payload.libraries.urls }}
+      
     - name: Cache Gradle
       uses: actions/cache@v2
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
         restore-keys: ${{ runner.os }}-gradle
+        
     - name: Decompile Minecraft
       run: ./gradlew run
+      
     - name: Checkout Actions
       uses: actions/checkout@v3
       with:
         path: action
+        
     - name: Commit Changes
       id: commit
       uses: ./action
@@ -57,6 +64,7 @@ jobs:
         user_email: 'ero-git@pm.me'
         user_name: 'ero-git'
         commit_message: ${{ github.event.client_payload.version }}
+        
     - name: Update Worker State
-      run: 'curl -H "Content-Type: application/json" -d "{"state"&#58; "${{ job.status }}", "version"&#58; "${{ github.event.client_payload.version }}", "commit"&#58; "${{ steps.commit.outputs.commit_hash }}"}" ${{ secrets.WORKER }}/complete'
+      run: 'curl -H "Content-Type: application/json" -d "{"state":: "${{ job.status }}", "version":: "${{ github.event.client_payload.version }}", "commit":: "${{ steps.commit.outputs.commit_hash }}"}" ${{ secrets.WORKER_URL }}/complete'
 
