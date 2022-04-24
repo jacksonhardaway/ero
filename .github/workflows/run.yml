@@ -1,4 +1,5 @@
 name: Run Ero
+concurrency: decompile
 
 on:
   repository_dispatch:
