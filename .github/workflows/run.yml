@@ -53,16 +53,16 @@ jobs:
       with:
         source_file: 'run/output/.'
         destination_repo: 'jaacksondev/ero-minecraft-source'
-        user_email: 'jackson@moonflower.gg'
-        user_name: 'jaacksondev'
+        user_email: 'ero-git@pm.me'
+        user_name: 'ero-git'
         commit_message: ${{ github.event.client_payload.version }}
     - name: Update Worker State
       if: ${{ success() }}
       env:
         WORKER: ${{ secrets.WORKER_URL }}
-      run: curl $WORKER/finish?commit=${{ steps.commit.outputs.commit_hash }}
+      run: curl $WORKER/finish?c=${{ steps.commit.outputs.commit_hash }}&v=${{ github.event.client_payload.version }}
     - name: Update Worker Fail State
       if: ${{ failure() }}
       env:
         WORKER: ${{ secrets.WORKER_URL }}
-      run: curl $WORKER/fail
+      run: curl $WORKER/fail?v=${{ github.event.client_payload.version }}
