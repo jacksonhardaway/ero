@@ -66,5 +66,5 @@ jobs:
         commit_message: ${{ github.event.client_payload.version }}
         
     - name: Update Worker State
-      run: 'curl -H "Content-Type: application/json" -d "{"state":: "${{ job.status }}", "version":: "${{ github.event.client_payload.version }}", "commit":: "${{ steps.commit.outputs.commit_hash }}"}" ${{ secrets.WORKER_URL }}/complete'
+      run: 'curl -H "Content-Type: application/json" -d ''{"state":"${{ job.status }}","version":"${{ github.event.client_payload.version }}","commit":"${{ steps.commit.outputs.commit_hash }}"}'' ${{ secrets.WORKER_URL }}/complete'
 
