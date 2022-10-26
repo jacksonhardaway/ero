@@ -17,7 +17,7 @@ git config --global user.name "$INPUT_USER_NAME"
 git clone --single-branch --branch main "https://x-access-token:$API_TOKEN_GITHUB@github.com/$INPUT_DESTINATION_REPO.git" "$CLONE_DIR"
 
 echo "Deleting files"
-rm -rf "$CLONE_DIR/*"
+rm -rf $CLONE_DIR/*
 
 DEST_COPY="$CLONE_DIR/$INPUT_DESTINATION_FOLDER"
 
