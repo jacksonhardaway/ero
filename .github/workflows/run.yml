@@ -36,6 +36,7 @@ jobs:
       run: wget -P run/ $CLIENT $CLIENT_MAPPINGS $SERVER $SERVER_MAPPINGS
       
     - name: Download Libraries
+      continue-on-error: true
       run: wget -P run/libraries/ ${{ github.event.client_payload.libraries.urls }}
       
     - name: Cache Gradle
